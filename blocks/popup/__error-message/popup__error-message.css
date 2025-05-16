@@ -1,0 +1,6 @@
+.popup__error-message {
+    color: red;
+    font-size: 12px;
+    height: 16px; /* Чтобы сохранить место под ошибкой */
+    margin-top: 4px;
+}
