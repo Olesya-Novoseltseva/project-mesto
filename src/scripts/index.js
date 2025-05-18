@@ -1,8 +1,9 @@
 import { initialCards } from './cards.js';
 import { createCard } from './card.js';
 import { openModal, closeModal } from './modal.js';
-import { validateCardForm, validateProfile } from './validation.js';
+//import { validateCardForm, validateProfile } from './validation.js';
 import { handleCardFormSubmit, handleProfileFormSubmit } from './handlers.js';
+import { enableValidation } from './validation.js';
 
 export const cardTemplate = document.querySelector('#card-template').content;
 export const placesList = document.querySelector('.places__list');
@@ -49,13 +50,13 @@ document.addEventListener('keydown', (evt) => {
 });
 
 // Обработчики событий
-newCardTitle.addEventListener('input', validateCardForm);
-newCardImage.addEventListener('input', validateCardForm);
+//newCardTitle.addEventListener('input', validateCardForm);
+//newCardImage.addEventListener('input', validateCardForm);
 
 
 // Добавляем слушатели событий на поля ввода
-profileNameInput.addEventListener('input', validateProfile);
-profileDescriptionInput.addEventListener('input', validateProfile);
+//profileNameInput.addEventListener('input', validateProfile);
+//profileDescriptionInput.addEventListener('input', validateProfile);
 
 
 // Открытие попапа редактирования профиля
@@ -67,7 +68,7 @@ editButton.addEventListener('click', () => {
 });
 
 // Инициализация состояния кнопки при загрузке страницы
-validateProfile();
+//validateProfile();
 
 // Закрытие попапа редактирования профиля
 const closeEditButton = profilePopup.querySelector('.popup__close');
@@ -80,7 +81,7 @@ addButton.addEventListener('click', () => {
     newCardTitle.value = newCardTitle.textContent;
     newCardImage.value = newCardImage.textContent;
     openModal(cardPopup);
-    validateCardForm();
+    //validateCardForm();
 });
 
 const closeCardButton = cardPopup.querySelector('.popup__close');
@@ -98,5 +99,13 @@ profileForm.addEventListener('submit', handleProfileFormSubmit);
 cardFormElement.addEventListener('submit', handleCardFormSubmit);
 
 
+const validationSettings = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+};
 
-
+enableValidation(validationSettings);
