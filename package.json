@@ -1,0 +1,23 @@
+{
+  "name": "project-mesto",
+  "version": "0.0.1",
+  "description": "студент, когорта, стэк",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Olesya-Novoseltseva/project-mesto.git"
+  },
+  "author": "Olesya Novoseltseva",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Olesya-Novoseltseva/project-mesto/issues"
+  },
+  "homepage": "https://github.com/Olesya-Novoseltseva/project-mesto#readme",
+  "devDependencies": {
+    "webpack": "^5.99.8",
+    "webpack-cli": "^6.0.1"
+  }
+}
