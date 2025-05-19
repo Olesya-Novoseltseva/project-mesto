@@ -1,5 +1,3 @@
-// api.js
-
 const config = {
   baseUrl: 'https://nomoreparties.co/v1/apf-cohort-202',
   headers: {

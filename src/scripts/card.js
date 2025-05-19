@@ -1,7 +1,6 @@
 import { cardTemplate, imagePopup } from './index.js';
 import { openModal } from './modal.js';
-import { deleteCard } from './api.js';
-import { likeCard, unlikeCard } from './api.js';
+import { likeCard, unlikeCard, deleteCard } from './api.js';
 
 function createCard(cardData, currentUserId) {
   const cardElement = cardTemplate.children[0].cloneNode(true);
@@ -9,7 +8,7 @@ function createCard(cardData, currentUserId) {
   const cardTitle = cardElement.querySelector('.card__title');
   const cardLikeButton = cardElement.querySelector('.card__like-button');
   const cardDeleteButton = cardElement.querySelector('.card__delete-button');
-  const cardLikeContainer = cardElement.querySelector('.card__like-container'); // Добавляем контейнер
+  const cardLikeContainer = cardElement.querySelector('.card__like-container'); 
 
   // Создаем элемент для количества лайков и добавляем в контейнер
   let cardLikeCount = cardElement.querySelector('.card__like-count');

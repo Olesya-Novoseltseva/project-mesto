@@ -1,4 +1,3 @@
-//import { initialCards } from './cards.js';
 import { createCard } from './card.js';
 import { openModal, closeModal } from './modal.js';
 //import { validateCardForm, validateProfile } from './validation.js';

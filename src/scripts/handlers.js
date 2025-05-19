@@ -1,22 +1,7 @@
-//import { placesList, 
-//    profileName, 
-//    profileDescription, 
-//    profileNameInput, 
-//    profileDescriptionInput, 
-//    newCardTitle, 
-//    newCardImage, 
-//    cardPopup, 
-//    profilePopup } from './index.js';
-//import { closeModal } from './modal.js';
-//import { createCard } from './card.js';
-//import { updateUserInfo } from './api.js';
-
-import { placesList, newCardTitle, newCardImage, cardPopup, profileNameInput, profileDescriptionInput, profileName, profileDescription } from './index.js';
+import { placesList, newCardTitle, newCardImage, cardPopup, profileNameInput, profileDescriptionInput, profileName, profileDescription, currentUserId } from './index.js';
 import { closeModal } from './modal.js';
 import { createCard } from './card.js';
-import { addNewCard, updateUserInfo } from './api.js';
-import { currentUserId } from './index.js';
-import { updateUserAvatar } from './api.js';
+import { addNewCard, updateUserInfo, updateUserAvatar } from './api.js';
 
 const profileImage = document.querySelector('.profile__image');
 
