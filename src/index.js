@@ -1,9 +1,10 @@
-import { createCard } from './card.js';
-import { openModal, closeModal } from './modal.js';
+import './pages/index.css';
+import { createCard } from './scripts/card.js';
+import { openModal, closeModal } from './scripts/modal.js';
 //import { validateCardForm, validateProfile } from './validation.js';
-import { handleCardFormSubmit, handleProfileFormSubmit, handleAvatarFormSubmit } from './handlers.js';
-import { enableValidation } from './validation.js';
-import { getUserInfo, getInitialCards } from './api.js';
+import { handleCardFormSubmit, handleProfileFormSubmit, handleAvatarFormSubmit } from './scripts/handlers.js';
+import { enableValidation } from './scripts/validation.js';
+import { getUserInfo, getInitialCards, deleteCard } from './scripts/api.js';
 
 export const cardTemplate = document.querySelector('#card-template').content;
 export const placesList = document.querySelector('.places__list');
@@ -33,6 +34,11 @@ const avatarForm = avatarPopup.querySelector('.popup__form');
 const avatarInput = avatarPopup.querySelector('.popup__input_type_avatar-link');
 const avatarButton = document.querySelector('.profile__avatar-edit-button');
 const profileImage = document.querySelector('.profile__image');
+
+const confirmDeletePopup = document.querySelector('.popup_type_confirm-delete');
+const confirmDeleteForm = confirmDeletePopup.querySelector('form');
+const confirmDeleteButton = confirmDeleteForm.querySelector('.popup__button');
+let cardToDelete = null;
 
 getUserInfo()
   .then(user => {
@@ -131,6 +137,34 @@ closeAvatarButton.addEventListener('click', () => closeModal(avatarPopup));
 
 // Отправка формы
 avatarForm.addEventListener('submit', handleAvatarFormSubmit);
+
+export function openConfirmDelete(cardElement, cardId) {
+  cardToDelete = { element: cardElement, id: cardId };
+  console.log('я открылся');
+  openModal(confirmDeletePopup);
+}
+
+confirmDeleteForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+
+  confirmDeleteButton.textContent = 'Удаление...';
+
+  deleteCard(cardToDelete.id)
+    .then(() => {
+      cardToDelete.element.remove();
+      closeModal(confirmDeletePopup);
+    })
+    .catch(err => {
+      console.error('Ошибка удаления карточки:', err);
+    })
+    .finally(() => {
+      confirmDeleteButton.textContent = 'Да';
+      cardToDelete = null;
+    });
+});
+
+const confirmDeleteCloseButton = confirmDeletePopup.querySelector('.popup__close');
+confirmDeleteCloseButton.addEventListener('click', () => closeModal(confirmDeletePopup));
 
 
 const validationSettings = {

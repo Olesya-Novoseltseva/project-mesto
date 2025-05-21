@@ -1,59 +1,92 @@
-import { placesList, newCardTitle, newCardImage, cardPopup, profileNameInput, profileDescriptionInput, profileName, profileDescription, currentUserId } from './index.js';
+import { placesList, newCardTitle, newCardImage, cardPopup, profileNameInput, profileDescriptionInput, profileName, profileDescription, currentUserId } from '../index.js';
 import { closeModal } from './modal.js';
 import { createCard } from './card.js';
 import { addNewCard, updateUserInfo, updateUserAvatar } from './api.js';
 
 const profileImage = document.querySelector('.profile__image');
 
-export function handleCardFormSubmit(evt) {
-  evt.preventDefault();
-
-  const newCardData = {
-    name: newCardTitle.value,
-    link: newCardImage.value,
-  };
-
-  addNewCard(newCardData)
-    .then(cardData => {
-      const card = createCard(cardData, currentUserId);
-      placesList.prepend(card);
-      closeModal(cardPopup);
-    })
-    .catch(err => {
-      console.error('Ошибка при добавлении карточки:', err);
-      alert('Не удалось добавить карточку');
-    });
+function setLoading(button, isLoading, defaultText = 'Сохранить') {
+  if (isLoading) {
+    button.textContent = 'Сохранение...';
+  } else {
+    button.textContent = defaultText;
+  }
 }
 
 
+export function handleCardFormSubmit(evt) {
+  evt.preventDefault();
+
+  const form = evt.target;
+  const submitButton = form.querySelector('.popup__button');
+  const title = form.title.value;
+  const link = form.link.value;
+
+  setLoading(submitButton, true);
+
+  addNewCard({ name: title, link })
+    .then(cardData => {
+      // Создаем карточку и добавляем в список
+      const card = createCard(cardData, currentUserId);
+      document.querySelector('.places__list').prepend(card);
+
+      closeModal(form.closest('.popup'));
+    })
+    .catch(err => {
+      console.error('Ошибка добавления карточки:', err);
+    })
+    .finally(() => {
+      setLoading(submitButton, false);
+    });
+}
+
 export function handleProfileFormSubmit(evt) {
-    evt.preventDefault();
+  evt.preventDefault();
 
-    const newName = profileNameInput.value;
-    const newAbout = profileDescriptionInput.value;
+  const form = evt.target;
+  const submitButton = form.querySelector('.popup__button');
+  const name = form.name.value;
+  const about = form.description.value;
 
-    updateUserInfo({ name: newName, about: newAbout })
-      .then((user) => {
-        profileName.textContent = user.name;
-        profileDescription.textContent = user.about;
-        closeModal(profilePopup);
-      })
-      .catch(err => console.error('Ошибка при обновлении профиля:', err));
+  setLoading(submitButton, true);
+
+  updateUserInfo({ name, about })
+    .then(user => {
+      // Обновляем профиль на странице
+      document.querySelector('.profile__title').textContent = user.name;
+      document.querySelector('.profile__description').textContent = user.about;
+
+      closeModal(form.closest('.popup'));
+    })
+    .catch(err => {
+      console.error('Ошибка обновления профиля:', err);
+      // Попап остается открыт, текст кнопки сменится в finally
+    })
+    .finally(() => {
+      setLoading(submitButton, false);
+    });
 }
 
 
 export function handleAvatarFormSubmit(evt) {
   evt.preventDefault();
-  const form = evt.target;
-  const avatarLink = form.avatar.value;
 
-  updateUserAvatar(avatarLink)
+  const form = evt.target;
+  const submitButton = form.querySelector('.popup__button');
+  const avatar = form.avatar.value;
+
+  setLoading(submitButton, true);
+
+  updateUserAvatar({ avatar })
     .then(user => {
-      profileImage.style.backgroundImage = `url(${user.avatar})`;
-      closeModal(document.querySelector('.popup_type_edit-avatar'));
+      document.querySelector('.profile__image').style.backgroundImage = `url(${user.avatar})`;
+
+      closeModal(form.closest('.popup'));
     })
     .catch(err => {
-      console.error('Ошибка при обновлении аватара:', err);
-      alert('Не удалось обновить аватар. Убедитесь, что введена корректная ссылка.');
+      console.error('Ошибка обновления аватара:', err);
+    })
+    .finally(() => {
+      setLoading(submitButton, false);
     });
 }
