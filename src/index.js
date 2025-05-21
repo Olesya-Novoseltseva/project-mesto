@@ -1,4 +1,4 @@
-//import './pages/index.css';
+import './pages/index.css';
 import { createCard } from './scripts/card.js';
 import { openModal, closeModal } from './scripts/modal.js';
 //import { validateCardForm, validateProfile } from './validation.js';
