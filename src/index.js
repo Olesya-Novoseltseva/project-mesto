@@ -1,10 +1,10 @@
 import './pages/index.css';
-import { createCard } from './scripts/card.js';
-import { openModal, closeModal } from './scripts/modal.js';
+import { createCard } from './components/card.js';
+import { openModal, closeModal } from './components/modal.js';
 //import { validateCardForm, validateProfile } from './validation.js';
-import { handleCardFormSubmit, handleProfileFormSubmit, handleAvatarFormSubmit } from './scripts/handlers.js';
-import { enableValidation } from './scripts/validation.js';
-import { getUserInfo, getInitialCards, deleteCard } from './scripts/api.js';
+import { handleCardFormSubmit, handleProfileFormSubmit, handleAvatarFormSubmit } from './components/handlers.js';
+import { enableValidation } from './components/validation.js';
+import { getUserInfo, getInitialCards, deleteCard } from './components/api.js';
 
 export const cardTemplate = document.querySelector('#card-template').content;
 export const placesList = document.querySelector('.places__list');
