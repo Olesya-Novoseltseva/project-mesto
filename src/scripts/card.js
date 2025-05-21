@@ -57,7 +57,7 @@ function createCard(cardData, currentUserId) {
   }
 
 
-  if (cardData.owner._id === currentUserId) {
+  /*if (cardData.owner._id === currentUserId) {
     cardDeleteButton.addEventListener('click', () => {
       deleteCard(cardData._id)
         .then(() => {
@@ -70,7 +70,7 @@ function createCard(cardData, currentUserId) {
     });
   } else {
     cardDeleteButton.remove();
-  }
+  }*/
 
   cardImage.addEventListener('click', () => {
     const popupImage = imagePopup.querySelector('.popup__image');
