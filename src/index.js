@@ -166,7 +166,7 @@ const confirmDeleteCloseButton = confirmDeletePopup.querySelector('.popup__close
 confirmDeleteCloseButton.addEventListener('click', () => closeModal(confirmDeletePopup));
 
 
-const validationSettings = {
+export const validationSettings = {
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
   submitButtonSelector: '.popup__button',

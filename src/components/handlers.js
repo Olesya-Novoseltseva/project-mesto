@@ -2,6 +2,7 @@ import { placesList, newCardTitle, newCardImage, cardPopup, profileNameInput, pr
 import { closeModal } from './modal.js';
 import { createCard } from './card.js';
 import { addNewCard, updateUserInfo, updateUserAvatar } from './api.js';
+import { validationSettings } from '../index.js';
 
 const profileImage = document.querySelector('.profile__image');
 
@@ -29,7 +30,7 @@ export function handleCardFormSubmit(evt) {
       // Создаем карточку и добавляем в список
       const card = createCard(cardData, currentUserId);
       document.querySelector('.places__list').prepend(card);
-
+      submitButton.classList.add(validationSettings.inactiveButtonClass);
       closeModal(form.closest('.popup'));
     })
     .catch(err => {
@@ -55,7 +56,7 @@ export function handleProfileFormSubmit(evt) {
       // Обновляем профиль на странице
       document.querySelector('.profile__title').textContent = user.name;
       document.querySelector('.profile__description').textContent = user.about;
-
+      submitButton.classList.add(validationSettings.inactiveButtonClass);
       closeModal(form.closest('.popup'));
     })
     .catch(err => {
@@ -81,6 +82,7 @@ export function handleAvatarFormSubmit(evt) {
   updateUserAvatar(avatarLink)
     .then((userData) => {
       profileImage.style.backgroundImage = `url(${userData.avatar})`;
+      submitButton.classList.add(validationSettings.inactiveButtonClass);
       closeModal(form.closest('.popup'));
     })
     .catch((err) => {
