@@ -1,4 +1,4 @@
-import { placesList, newCardTitle, newCardImage, cardPopup, profileNameInput, profileDescriptionInput, profileName, profileDescription, currentUserId } from '../index.js';
+import { currentUserId } from '../index.js';
 import { closeModal } from './modal.js';
 import { createCard } from './card.js';
 import { addNewCard, updateUserInfo, updateUserAvatar } from './api.js';
@@ -14,56 +14,63 @@ function setLoading(button, isLoading, defaultText = 'Сохранить') {
   }
 }
 
+function toggleFormLock(form, isLocked) {
+  const inputs = form.querySelectorAll('input, textarea, button');
+  inputs.forEach(input => {
+    input.disabled = isLocked;
+  });
+}
 
 export function handleCardFormSubmit(evt) {
   evt.preventDefault();
-
   const form = evt.target;
   const submitButton = form.querySelector('.popup__button');
-  const title = form.title.value;
-  const link = form.link.value;
 
+  toggleFormLock(form, true); // Блокируем всю форму
   setLoading(submitButton, true);
 
-  addNewCard({ name: title, link })
+  addNewCard({ 
+    name: form.title.value, 
+    link: form.link.value 
+  })
     .then(cardData => {
-      // Создаем карточку и добавляем в список
       const card = createCard(cardData, currentUserId);
       document.querySelector('.places__list').prepend(card);
-      submitButton.classList.add(validationSettings.inactiveButtonClass);
+      form.reset(); // Очищаем форму
       closeModal(form.closest('.popup'));
     })
     .catch(err => {
       console.error('Ошибка добавления карточки:', err);
     })
     .finally(() => {
+      toggleFormLock(form, false); // Разблокируем форму
       setLoading(submitButton, false);
     });
 }
 
+
 export function handleProfileFormSubmit(evt) {
   evt.preventDefault();
-
   const form = evt.target;
   const submitButton = form.querySelector('.popup__button');
-  const name = form.name.value;
-  const about = form.description.value;
 
+  toggleFormLock(form, true); // Блокируем всю форму
   setLoading(submitButton, true);
 
-  updateUserInfo({ name, about })
+  updateUserInfo({ 
+    name: form.name.value, 
+    about: form.description.value 
+  })
     .then(user => {
-      // Обновляем профиль на странице
       document.querySelector('.profile__title').textContent = user.name;
       document.querySelector('.profile__description').textContent = user.about;
-      submitButton.classList.add(validationSettings.inactiveButtonClass);
       closeModal(form.closest('.popup'));
     })
     .catch(err => {
       console.error('Ошибка обновления профиля:', err);
-      // Попап остается открыт, текст кнопки сменится в finally
     })
     .finally(() => {
+      toggleFormLock(form, false); //  Разблокируем форму
       setLoading(submitButton, false);
     });
 }
@@ -72,23 +79,32 @@ export function handleProfileFormSubmit(evt) {
 export function handleAvatarFormSubmit(evt) {
   evt.preventDefault();
   const form = evt.target;
-  const avatarInput = form.querySelector('.popup__input_type_avatar-link');
-  const button = form.querySelector('.popup__button');
+  const submitButton = form.querySelector('.popup__button');
+  const urlInput = form.querySelector('input[name="avatar"]'); // Изменён селектор
+  
+  if (!urlInput) {
+    console.error('Не найдено поле для ввода URL аватара');
+    return;
+  }
 
-  const avatarLink = avatarInput.value.trim();
+  const avatarUrl = urlInput.value.trim();
 
-  button.textContent = 'Сохранение...';
+  // Блокируем форму
+  toggleFormLock(form, true);
+  setLoading(submitButton, true);
 
-  updateUserAvatar(avatarLink)
-    .then((userData) => {
+  updateUserAvatar(avatarUrl)
+    .then(userData => {
       profileImage.style.backgroundImage = `url(${userData.avatar})`;
-      submitButton.classList.add(validationSettings.inactiveButtonClass);
+      form.reset();
       closeModal(form.closest('.popup'));
     })
-    .catch((err) => {
+    .catch(err => {
       console.error('Ошибка при обновлении аватара:', err);
+      showInputError(form, urlInput, 'Не удалось обновить аватар', validationSettings);
     })
     .finally(() => {
-      button.textContent = 'Сохранить';
+      toggleFormLock(form, false);
+      setLoading(submitButton, false);
     });
 }

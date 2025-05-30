@@ -143,36 +143,43 @@ export function openConfirmDelete(cardElement, currentUserId) {
   openModal(confirmDeletePopup);
 }
 
-confirmDeleteForm.addEventListener('submit', (evt) => {
+confirmDeleteForm.addEventListener('submit', async (evt) => {
   evt.preventDefault();
-
-  confirmDeleteButton.textContent = 'Удаление...';
-
-  deleteCard(cardToDelete.id)
-    .then(() => {
-      cardToDelete.element.remove();
-      closeModal(confirmDeletePopup);
-    })
-    .catch(err => {
-      console.error('Ошибка удаления карточки:', err);
-    })
-    .finally(() => {
-      confirmDeleteButton.textContent = 'Да';
-      cardToDelete = null;
-    });
+  const confirmButton = confirmDeleteForm.querySelector('.popup__button');
+  
+  try {
+    // Блокируем кнопку
+    confirmButton.textContent = 'Удаление...';
+    confirmButton.disabled = true;
+    
+    // Пытаемся удалить карточку
+    await deleteCard(cardToDelete.id);
+    
+    // Если удалось - удаляем из DOM и закрываем попап
+    cardToDelete.element.remove();
+    closeModal(confirmDeletePopup);
+  } catch (err) {
+    console.error('Ошибка удаления:', err);
+    alert('Не удалось удалить карточку');
+  } finally {
+    // В любом случае восстанавливаем кнопку
+    confirmButton.textContent = 'Да';
+    confirmButton.disabled = false;
+    cardToDelete = null;
+  }
 });
 
 const confirmDeleteCloseButton = confirmDeletePopup.querySelector('.popup__close');
 confirmDeleteCloseButton.addEventListener('click', () => closeModal(confirmDeletePopup));
 
 
-export const validationSettings = {
+ export const validationSettings = {
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
   submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_disabled',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__error_visible'
+  inactiveButtonClass: 'popup__button_disabled', 
+  inputErrorClass: 'popup__input_type_error',   
+  errorClass: 'popup__error_visible'           
 };
 
 enableValidation(validationSettings);

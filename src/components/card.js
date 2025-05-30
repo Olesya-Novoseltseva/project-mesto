@@ -1,13 +1,12 @@
 import { cardTemplate, imagePopup, openConfirmDelete } from '../index.js';
 import { openModal } from './modal.js';
-import { likeCard, unlikeCard, deleteCard } from './api.js';
+import { likeCard, unlikeCard } from './api.js';
 
 function createCard(cardData, currentUserId) {
   const cardElement = cardTemplate.children[0].cloneNode(true);
   const cardImage = cardElement.querySelector('.card__image');
   const cardTitle = cardElement.querySelector('.card__title');
   const cardLikeButton = cardElement.querySelector('.card__like-button');
-  const cardDeleteButton = cardElement.querySelector('.card__delete-button');
   const cardLikeContainer = cardElement.querySelector('.card__like-container'); 
 
 
@@ -32,18 +31,26 @@ function createCard(cardData, currentUserId) {
   }
 
   cardLikeButton.addEventListener('click', () => {
-    const isLiked = cardLikeButton.classList.contains('card__like-button_is-active');
+  // Блокируем кнопку на время выполнения запроса
+  cardLikeButton.disabled = true;
+  
+  const isLiked = cardLikeButton.classList.contains('card__like-button_is-active');
+  const likeAction = isLiked ? unlikeCard(cardData._id) : likeCard(cardData._id);
 
-    const likeAction = isLiked ? unlikeCard(cardData._id) : likeCard(cardData._id);
-
-    likeAction.then(updatedCard => {
+  likeAction
+    .then(updatedCard => {
       cardLikeButton.classList.toggle('card__like-button_is-active', !isLiked);
       cardLikeCount.textContent = updatedCard.likes.length;
-    }).catch(err => {
+    })
+    .catch(err => {
       console.error('Ошибка при обновлении лайка:', err);
       alert('Не удалось обновить лайк');
+    })
+    .finally(() => {
+      // Восстанавливаем кнопку в любом случае
+      cardLikeButton.disabled = false;
     });
-  });
+});
 
   const deleteButton = cardElement.querySelector('.card__delete-button');
 
